@@ -1,0 +1,237 @@
+---
+title: "Taller R y EPH"
+author: "NIS - RLadies"
+date: "2023-07-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(eph)
+library(janitor)
+
+```
+
+## Acerca de la EPH
+
+La encuesta permanente de hogares es una de las principales fuentes para el análisis de las problemáticas sociales presentes en Argentina. Se realiza de manera contínua desde XXXX por cohortes cuatrimestrales con una muestra XXXXX con rotación anual y con representación en los principales aglomerados de XXXXX.
+
+La EPH es una referencia ineludible a la hora de realizar cualquier tipo de seguimiento vinculado a estimación mercado laboral ingresos y condiciones de vida.
+
+Si bien INDEC disponibliiza las micro-bases, el paquete de EPH nos permite su uso y manipulación de manera ordenada en un entorno de código abierto democratizando el uso y acceso a la información de toda la comunidad.
+
+La EPH se organiza basicamente en dos grandes cuerpos o unidades de análisis Hogares e Individuos. Para poder observar la correspondencia entre uno y otro tenemos una clave de union (CODUSU) que nos permitirá jugar con la relación entre ambos y por ejemplo identificar una serie de casos en el tiempo para observar su evolución.
+
+El paquete de EPH nos ayudará en algunas de estas tareas.
+
+Muchos de los ejercicios y funciones que vamos a aplicar aquí podes encontrarlos en la [viñeta del paquete EPH](https://holatam.github.io/eph/index.html) 
+
+
+## Preparándonos para trabajar con la EPH
+
+Para poder trabajar ordenadamente te recomendamos tener a mano:
+
+-   Los formularios (te van a permitir entender bien la estructura y pases)
+-   El registro: donde tenes la referencia del código de pregunta, estructura y en caso que corresponda las categorías posibles que tiene que adoptar.
+
+<!-- acá agregar los links a cada uno y agergarlos dentro de la carpeta del proyecto -->
+
+## Obtener datos
+
+Vamos a arrancar descargando los datos con la función `get_microdata()`. En este caso vamos a descargar los resultados de la base de individuos del primer trimestre de 2022. Si quisieramos especificar una serie de variables en particular con las cuales vamos a trabajar
+
+> TIP: Para revisar los parámetros de una función siempre podemos consultar la la ayuda de R posicionándonos sobre la función y presionando la tecla F1.
+
+```{r}
+ind_2022_1 <- get_microdata(
+  year = 2022,
+  trimester = 1,
+  type = "individual",
+  vars = "all",
+  destfile = NA
+)
+
+glimpse(ind_2022_1)
+```
+
+En el caso de que nos interesara trabajar por ej. solo con las variables de características de miembros del hogar podría crear un vector (guiandonos con la información que tenemos en el [Diseño de Registro](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eph/EPH_registro_t218.pdf) de 2018) e indicándolo en el parámetro vars
+
+```{r}
+variables_individuos <- c('CODUSU','NRO_HOGAR','COMPONENTE','ANO4', 'TRIMESTRE','CH04','CH03', 'CH06', 'NIVEL_ED','PONDERA', 'ESTADO') 
+  
+
+ind_2022_1 <- get_microdata(
+  year = 2022,
+  trimester = 1,
+  type = "individual",
+  vars = variables_individuos,
+  destfile = NA
+)
+
+head(ind_2022_1)
+
+```
+
+## Etiquetado de variables
+
+Si quisiéramos por ej. ver la distribución de individuos en función del nivwl educativo *"¿Cuál es el nivel más alto que cursa o cursó?"*
+
+```{r}
+ind_2022_1 %>% 
+  group_by(NIVEL_ED) %>% 
+  summarise(recuento_individuos =n_distinct(CODUSU) )
+```
+
+mmm parece que lo que nos falta aquí son las etiquetas de la variable y para ello el paquete EPH nos facilita parte de esta tarea a veces tan tediosa: codificar variables categóricas. Para ello vamos a usar la función `organize_labels()`
+
+```{r}
+ind_2022_1 <- ind_2022_1 |> 
+  organize_labels(type = "individual")
+
+```
+
+En el warning nos avisa que algunas de las variables no han sido etiquetadas esto es porque justamente sólo estamos trabajando con algunas variables.
+
+Veamos cómo queda la estructura de la variable etiquetada:
+
+```{r}
+str(ind_2022_1$NIVEL_ED)
+```
+
+Los datos de tipo "labelled" en R son aquellos que tienen asociadas etiquetas o categorías específicas que se utilizan para describir los valores numéricos, es decir variables categóricas. Para poder considerar las etiquetas asociadas a estos valores tenemos que avisarle a R que CH12 es una variable categórica, lo cual podemos hacer así
+
+```{r}
+
+ind_2022_1 %>% 
+  mutate(NIVEL_ED = as.factor(NIVEL_ED)) |> 
+  group_by(NIVEL_ED) |> #agrupar según CH12 
+  summarise(Recuento = n_distinct(CODUSU)) |> #resumir los casos unicos de la variable CODUSU
+  gt::gt() # hermosear
+```
+
+o directamente lo que es lo mismo
+
+```{r}
+ind_2022_1 %>% 
+  group_by("Nivel educativo" = as.factor(NIVEL_ED)) |> 
+  summarise(Recuento = n_distinct(CODUSU)) |> 
+  gt::gt() # hermosear
+```
+
+## Ponderando datos
+
+Algo que por lo general tenemos que hacer de manera muy habitual es trabajar con los datos de la EPH de manera ponderada en tablas pivot o cruzadas. 
+Y si... ya adivinaste el paquete de EPH también nos ofrece una solución que nos va ahorrar tiempo y cabeza en cómo hacerlo. Por ej. siguiendo con la NIVEL_ED veamos si hay diferencias entre varones y mujeres (es decir la variable 'CH04').
+
+```{r}
+calculate_tabulates(
+  base = ind_2022_1, # la base
+  x = "NIVEL_ED", #variable de análisis
+  y = "CH04", # variable de cruce o interviniente
+  weights = "PONDERA", # el nombre de la variable que vamos a usar para ponderar
+  add.totals = c('both'),# queres ver totales? pueden ser 'none','row','col','both' 
+  add.percentage = "col" # queres ver porcentajes? puede ser 'none','row','col' 
+) |> 
+  gt::gt() # hermoseo
+```
+
+¿Hay diferencias en la distribución si vemos los datos sin ponderar?
+
+<!-- ver si esta parte se la dejamos para que la escriban elles -->
+
+```{r}
+# calculate_tabulates(
+#   base = ind_2022_1, # la base
+#   x = "NIVEL_ED", #variable de análisis
+#   y = "CH04", # variable de cruce o interviniente
+#   add.totals = c('both'),# queres ver totales? pueden ser 'none','row','col','both' 
+#   add.percentage = "col" # queres ver porcentajes? puede ser 'none','row','col' 
+# ) |> 
+#   gt::gt() 
+```
+
+## Relacionar hogares e individuos
+
+Veamos la relación entre las condiciones de pobreza  y el nivel educativo
+
+Traigamos las bases del primer y segundo trimestre de ambos formularios
+
+```{r}
+ind_2022_1_2 <- get_microdata(year = 2022,
+                            trimester = c(1,2),
+                            type = 'individual',
+                            vars = variables_individuos) 
+
+hog_2022_1_2 <- get_microdata(year = 2022,
+                            trimester = c(1,2),
+                            type = 'hogar') 
+# ver acá que variables usamos de los hogares
+
+
+
+  
+```
+vamos a unir ambas bases usando la función left_join
+
+```{r}
+eph_2022 <- ind_2022_1_2 |> 
+  left_join(hog_2022_1_2)
+
+# aca ver que cuando los joineamos ya etiquetados no joinea 
+```
+R nos informa que ha unido las bases por las variables que tienen en común: CODUSU, NRO_HOGAR, ANO4, TRIMESTRE, PONDERA.
+
+```{r}
+eph_2022 |> 
+  group_by(TRIMESTRE) |>  #agrupamos por trimestre
+  tally(PONDERA) 
+```
+```{r}
+eph_2022 |> 
+  filter(CH03==1) |>  #Nos quedamos con las jefaturas de hogar
+  group_by(TRIMESTRE) |> 
+  tally(PONDERA)
+```
+
+Gracias al paquete EPH nos bajamos las canastas de pobreza
+
+
+```{r}
+# obtener las canastas regionales
+canastas_regionales <- get_poverty_lines(regional = TRUE)
+# calculo de la condición de pobreza para la población
+eph_2022 <- calculate_poverty(eph_2022, canastas_regionales, print_summary = TRUE)
+```
+
+Nos arma una nueva columna llamada **situación** lo que nos indica en qué medida los hogares cubren o no sus necesidades básicas. 
+
+
+```{r}
+eph_2022 |> 
+  group_by(situacion) |> 
+  tally(PONDIH/2) |>  #promedio por los dos trimestres
+  filter(!is.na(situacion)) |> 
+  mutate(total_personas=sum(n)) |> 
+  mutate(prop = round(n/total_personas*100,2)) |> 
+  rename(personas=n)
+```
+pobreza según nivel educativo
+
+```{r}
+
+eph_2022 |> 
+  group_by(situacion,as.factor(NIVEL_ED)) |> 
+  tally(PONDIH/2) |>  #promedio por los dos trimestres
+  filter(!is.na(situacion)) |> 
+  mutate(total_personas=sum(n)) |> 
+  mutate(prop = round(n/total_personas*100,2)) |> 
+  rename(personas=n)
+```
+
+armar grafico 
+
+```{r}
+ggplot()
+```
+
