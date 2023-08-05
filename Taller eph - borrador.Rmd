@@ -33,9 +33,9 @@ Muchos de los ejercicios y funciones que vamos a aplicar aquí podes encontrarlo
 Para poder trabajar ordenadamente te recomendamos tener a mano:
 
 -   Los formularios (te van a permitir entender bien la estructura y pases)
--   El registro: donde tenes la referencia del código de pregunta, estructura y en caso que corresponda las categorías posibles que tiene que adoptar.
+-   [El registro de diseño](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eph/EPH_registro_1T2022.pdf): donde tenes la referencia del código de pregunta, estructura y en caso que corresponda las categorías posibles que tiene que adoptar.
 
-<!-- acá agregar los links a cada uno y agergarlos dentro de la carpeta del proyecto -->
+
 
 ## Obtener datos
 
