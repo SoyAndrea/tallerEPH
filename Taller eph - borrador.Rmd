@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## ¿Qué es la EPH?
 
-La Encuesta Permanente de Hogares, la EPH, es un relevamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
+La Encuesta Permanente de Hogares, la EPH, es un revelamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
 
 Gracias a la EOH podemos conocer los datos de Pobreza e indigencia, Tasa de desempleo,distribución del ingreso y condiciones de vida de los hogares entre otros indicadores
 
@@ -39,6 +39,7 @@ Tener instaladas las librerías que vamos a usar:
 ```{r}
 #install.packages(tidyvesre)
 #install.packages(gt)
+#install.packages(gtExtras)
 #install.packages(janitor)
 #install.packages(eph)
 ```
@@ -155,49 +156,115 @@ Y ahora nos vamos a quedar solamente con las variables de las tasas seleccionán
 
 ```{r}
 tabla_1 <- tabla_1 |> 
-  select(Actividad:'Subocupación no demandante')
+  select(Actividad:'Subocupación no demandante') |> 
+  mutate(ANO4 = 2023,
+         TRIMESTRE = 1) |> 
+  relocate(c(ANO4,TRIMESTRE), .before = 'Actividad')
 
 tabla_1
+```
+
+Ahora repetimos la operación con lo datos de 2022
+
+```{r}
+
+# obtener los datos
+ind_2022 <- get_microdata(
+  year = 2022,
+  trimester = c(1:4), # le decimos que traiga todos
+  type = "individual",
+  vars = "all",
+  destfile = NA
+)
+
+
+tabla_2 <- ind_2022 |> 
+  group_by(ANO4,TRIMESTRE) |> 
+  summarise(Poblacion          = sum(PONDERA),
+            Ocupacion          = sum(PONDERA[ESTADO == 1]),
+            Desocupacion       = sum(PONDERA[ESTADO == 2]),
+            PEA                = Ocupacion + Desocupacion,
+            Ocupacion_demandate = sum(PONDERA[ESTADO == 1 & PP03J ==1]),
+            Suboc_demandante   = sum(PONDERA[ESTADO == 1 & INTENSI ==1 & PP03J==1]),
+            Suboc_no_demand    = sum(PONDERA[ESTADO == 1 & INTENSI ==1 & PP03J %in% c(2,9)]),
+            Subocupacion       = Suboc_demandante + Suboc_no_demand) |> 
+  mutate('Actividad'                  = PEA/Poblacion,
+         'Empleo'                     = Ocupacion/Poblacion,
+         'Desocupación'               = Desocupacion/PEA,
+         'Ocupación demandante'       = Ocupacion_demandate/PEA,
+         'Subocupación'               = Subocupacion/PEA,
+         'Subocupación demandante'    = Suboc_demandante/PEA,
+         'Subocupación no demandante' = Suboc_no_demand/PEA) |> 
+  select(ANO4,TRIMESTRE,Actividad:'Subocupación no demandante') |> 
+  as_tibble()
+
+
+tabla_2
+
+
+```
+
+```{r}
+tabla_3 <- bind_rows(tabla_1,tabla_2)
+
+tabla_3
 ```
 
 
 Ya tenemos los datos que necesitamos pero parece que la tabla estuviera "acostada". Para que se ponga de pie o estire a lo largo vamos a usar la función `pivot_longer`
 
 ```{r}
-tabla_1 <- tabla_1 |> 
-  pivot_longer(cols = everything(), #Las columnas que queremos estirar en este caso son todas 
+tabla_3 <- tabla_3 |> 
+  pivot_longer(cols = -c(ANO4,TRIMESTRE), #Las columnas que queremos estirar en este caso son todas excepto el año y el trimestre
                names_to = "Tasas", # El nombre que le queremos poner
                values_to = "Valor") # el valor en cuestión que hay que repartir
 
 
-tabla_1
+tabla_3
 
 ```
 
-Solo nos queda multiplicar por 100 el valor de la tasa, el cual redondeamos a un decimal
+
+Vamos multiplicar por 100 el valor de la tasa, el cual redondeamos a un decimal
 
 ```{r}
-tabla_1 <- tabla_1 |> 
+tabla_3 <- tabla_3 |> 
   mutate(Valor = round(Valor*100,1))
 
-tabla_1
+tabla_3
+```
+
+Ahora vamos a crear una variable que combina el año y trimestre, desechando año y trimestre como variables por separado y vamos a "estirar" la tabla colocando al 1er trimestre de 2021 al final, tal cual se presenta en el reporte de INDEC
+
+```{r}
+#('Actividad','Empleo','Desocupación','Ocupación demandante','Subocupación','Subocupación demandante','Subocupación no demandante')
+
+tabla_3 <- tabla_3 |> 
+  mutate(ano_trimestre = paste(ANO4,TRIMESTRE)) |> # creamos una 
+  select(-c(ANO4,TRIMESTRE)) |> 
+  pivot_wider(names_from = c("ano_trimestre"), values_from = Valor) |> 
+  relocate("2023 1",.after = "2022 4" ) 
+
+tabla_3
+  
 ```
 
 
 >  Las funciones pivot_longer y pivot_wider nos ayudan a estirar y alargar los datos para saber más sobre ellas te resomendamos la lectura de [esta viñeta](https://tidyr.tidyverse.org/articles/pivot.html) donde vas a encontrar varios ejemplos.
 
 
-Ahora vamos a darle un estilo lo más parecido posible al del Informe técnico que hace INDEC
+Ahora vamos a darle un poco de estilo y color con el paquete de "gramática de tablas" `{gt}`
 
 
-<!-- AIUDAAAAA -->
+```{r message=FALSE, warning=FALSE}
 
-```{r}
-
-tabla_1 |> 
+tabla_4 <- tabla_3 |> 
   gt() |> 
-  tab_header(title = "Principales tasas del mercado de trabajo. Total 31 aglomerados urbanos.
-Primer trimestre 2022-primer trimestre 2023") |> 
+  # ponemos un título y subtitulo
+  tab_header(
+    title = md("**Principales tasas del mercado de trabajo. Total 31 aglomerados urbanos.**"),
+    subtitle = "Primer trimestre 2022-primer trimestre 2023") |> 
+  # Elegimos una tipografía y tamaños
   opt_table_font(
     font = list(
       google_font(name = "Montserrat"),
@@ -209,66 +276,78 @@ Primer trimestre 2022-primer trimestre 2023") |>
       )
     )
   ) |> 
+  # centramos las columnas del cuerpo
   cols_align(
-    align = "right",
-    columns = Valor
+    align = "center",
+    columns = 2:6
   ) |> 
-  tab_footnote('Fuente: INDEC, Encuesta Permanente de Hogares.')
+  # creamos una cabecera que agrupe cada año
+  gt::tab_spanner(
+    label = "2022",
+    columns = starts_with("2022")
+  ) |> 
+  gt::tab_spanner(
+    label = "2023",
+    columns = starts_with("2023")
+  ) |> 
+  # cambiamos las etiquetas de las columnas
+  cols_label("2022 1" = "1er Trimestre",
+             "2022 2" = "2do Trimestre",
+             "2022 3" = "3er Trimestre",
+             "2022 4" = "4to Trimestre",
+             "2023 1" = "1er Trimestre") |>
+  #agregamos un pié con la fuente y una aclaración indicando que nuestros datos están ponderados
+  tab_source_note('Fuente: INDEC, Encuesta Permanente de Hogares.') |> 
+  tab_footnote("Datos ponderados")
   
-  
+tabla_4  
 
 ```
 
 
 
 ```{r}
-tabla_1 |> 
-  mutate(Grafico = Valor) |> 
-  gt() |> 
-  tab_header(title = "Principales tasas del mercado de trabajo. Total 31 aglomerados urbanos.
-Primer trimestre 2022-primer trimestre 2023") |> 
-  opt_table_font(
-    font = list(
-      google_font(name = "Montserrat"),
-      labels = list(
-        title = list(weight = "bold", size = 9),
-        header = list(weight = "bold", size = 8),
-        footnote = list(weight = "bold", size = 8),
-        source = list(weight = "bold", size = 8)
-      )
-    )
-  ) |> 
-  cols_align(
-    align = "right",
-    columns = Valor
-  ) |> 
-  tab_footnote('Fuente: INDEC, Encuesta Permanente de Hogares.') |> 
-  gtExtras::gt_plt_bar(column = Grafico, scaled = TRUE,  fill = "blue", background = "lightblue")
+
+library(gtExtras)
+
+# poner a lo largo la tabla_3 armar variables de resumen ecolución para cada tasa y guardarlas como listas siguiendo este ej. 
+
+ # dplyr::group_by(cyl) %>%
+ #    # must end up with list of data for each row in the input dataframe
+ #    dplyr::summarize(mpg_data = list(mpg)) %>%
+
+evolucion <- tabla_3 %>%
+  pivot_longer(cols = -Tasas, names_to = "Trimestre", values_to = "Valor") %>%
+  arrange(Tasas, Trimestre) |> 
+  group_by(Tasas) %>%
+  summarize(Evolucion = list(Valor))
+
+tabla_5 <- left_join(tabla_3,evolucion) 
+
+tabla_5 |> 
+   gt() %>%
+   gt_plt_sparkline(Evolucion)
   
 ```
 
-
-
-
-
-<!-- ESTA PARTE VER SI LLEGAMOS QUIZAS ES MUCHO -->
-
-
-
-## Relacionar hogares e individuos
-
-Veamos la relación entre las condiciones de pobreza  y el nivel educativo
+!-- ESTA PARTE VER SI LLEGAMOS QUIZAS ES MUCHO -->
+  
+  
+  
+  ## Relacionar hogares e individuos
+  
+  Veamos la relación entre las condiciones de pobreza  y el nivel educativo
 
 Traigamos las bases del primer y segundo trimestre de ambos formularios
 
 ```{r}
 ind_2022 <- get_microdata(year = 2022,
-                            trimester = c(1,2,3,4),
-                            type = 'individual') 
+                          trimester = c(1,2,3,4),
+                          type = 'individual') 
 
 hog_2022_1_2 <- get_microdata(year = 2022,
-                            trimester = c(1,2,3,4),
-                            type = 'hogar') 
+                              trimester = c(1,2,3,4),
+                              type = 'hogar') 
 
 ```
 vamos a unir ambas bases usando la función left_join
