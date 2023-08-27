@@ -1,0 +1,73 @@
+---
+title: "Taller EPH"
+author: "Andrea Gómez Vargas & Betsabe Cohen"
+format:
+  revealjs: 
+    theme: dark
+---
+
+##  {background-color="black" background-image="portada.png" background-size="1800px" background-repeat="repeat"}
+
+## Temario
+
+-   Turn off alarm
+-   Get out of bed
+
+## ejemplo columnas
+
+::: columns
+::: {.column width="40%"}
+Left column
+:::
+
+::: {.column width="60%"}
+Right column
+:::
+:::
+
+::: aside
+Some additional commentary of more peripheral interest.
+:::
+
+## tabs
+
+::: panel-tabset
+### Tab A
+
+Content for `Tab A`
+
+### Tab B
+
+Content for `Tab B`
+:::
+
+## Slide Title {background-color="aquamarine"}
+
+Aca podemos escribir cosas importantes o no
+
+## ejemplo sitio
+
+```{r}
+knitr::include_url("https://holatam.github.io/eph/")
+```
+
+## You can add R code
+
+```{r}
+#| echo: true
+library(dplyr)
+library(ggplot2)
+g <- starwars |> 
+  ggplot() +
+  geom_point(aes(x = height, y = mass)) +
+  theme_light()
+```
+
+## And show the results aswell :)
+
+```{r}
+#| fig.align: center
+#| echo: true
+g 
+```
+
