@@ -1,8 +1,9 @@
 ---
 title: "Taller R y EPH"
-author: "NIS - RLadies"
-date: "2023-07-23"
-output: html_document
+subtitle: "NIS - RLadies Buenos Aire"
+author: "Betsy Cohen"
+date: "2023-09-07"
+output: rmdformats::downcute
 ---
 
 ```{r setup, include=FALSE}
@@ -37,11 +38,11 @@ Para poder trabajar ordenadamente te recomendamos:
 Tener instaladas las librerías que vamos a usar:
 
 ```{r}
-#install.packages(tidyvesre)
-#install.packages(gt)
-#install.packages(gtExtras)
-#install.packages(janitor)
-#install.packages(eph)
+# install.packages("tidyverse")
+# install.packages("gt")
+# install.packages("gtExtras")
+# install.packages("janitor")
+# install.packages("eph")
 ```
 
 Una buena práctica siempre que trabajes con **encuestas** es tener a mano:
@@ -55,7 +56,7 @@ Una buena práctica siempre que trabajes con **encuestas** es tener a mano:
 El primer paso es llamar a las librerías que vamos a usar que por lo general siempre las colocamos al principio de nuestro script
 
 ```{r setup_libraries, echo=FALSE}
-
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(tidyverse) # para manipular los datos
 library(eph) # para levantar los datos de la encuesta 
 library(janitor) # nos permite limpiar y acomodar facilmente los nombres de las variables (entre otras cosas)
