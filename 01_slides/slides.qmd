@@ -1,0 +1,101 @@
+---
+title: "Taller EPH"
+author: "Andrea Gómez Vargas & Betsabe Cohen"
+format:
+  revealjs: 
+    theme: dark
+---
+
+##  {background-color="black" background-image="portada.png" background-size="1800px" background-repeat="repeat"}
+
+## Temario
+
+-   Acerca de la es la EPH
+-   Muestra y ventanas de observación
+-   Ejercicio con indicadores de trabajo
+-   Extracción de datos `{EPH}`
+-   Calculo de indicadores
+-   Tablas con `{gt}`
+
+## Qué es la EPH {background-color="white"}
+
+La Encuesta Permanente de Hogares, la EPH, es un revelamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
+
+## Nos permite conocer los datos de... {background-color="white"}
+
+-   Pobreza e indigencia
+-   Tasa de desempleo
+-   Distribución del ingreso
+-   Condiciones de vida de los hogares.
+
+## Muestra {background-color="white"}
+
+::: panel-tabset
+### Polietápica
+
+-   **Primer etapa**, dentro de cada **aglomerado**, se selecciona una cantidad de **radios** censales o subdivisiones de los mismos (áreas).
+-   **Segunda etapa** se listan todas las **viviendas particulares** de las áreas seleccionadas,para efectuar a partir de ese listado una selección aleatoria de viviendas. **Los hogares** que habitan esas viviendas son los hogares a encuestar.
+
+### Esquema 2-2-2
+-   Las viviendas de un área **ingresan** a la muestra para ser encuestadas en **dos trimestres** consecutivos, en el mes y semana asignados a ese área.
+-   Se **retiran** por **dos trimestres** consecutivos.
+-   **Vuelven a la muestra** para ser encuestadas en **dos trimestres** consecutivos en el mes y semana asignados a ese área.
+:::
+
+## ejemplo columnas
+
+::: columns
+::: {.column width="40%"}
+Left column
+:::
+
+::: {.column width="60%"}
+Right column
+:::
+:::
+
+::: aside
+Some additional commentary of more peripheral interest.
+:::
+
+## tabs
+
+::: panel-tabset
+### Tab A
+
+Content for `Tab A`
+
+### Tab B
+
+Content for `Tab B`
+:::
+
+## Slide Title {background-color="aquamarine"}
+
+Aca podemos escribir cosas importantes o no
+
+## ejemplo sitio
+
+```{r}
+knitr::include_url("https://holatam.github.io/eph/")
+```
+
+## You can add R code
+
+```{r}
+#| echo: true
+library(dplyr)
+library(ggplot2)
+g <- starwars |> 
+  ggplot() +
+  geom_point(aes(x = height, y = mass)) +
+  theme_light()
+```
+
+## And show the results aswell :)
+
+```{r}
+#| fig.align: center
+#| echo: true
+g 
+```
