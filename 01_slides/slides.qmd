@@ -1,6 +1,6 @@
 ---
 title: "Introducción al Análisis de la Encuesta Permanente de Hogares (EPH) con R"
-author: "Andrea Gómez Vargas & Betsabe Cohen"
+author: "Betsabe Cohen & Andrea Gómez Vargas"
 institute: "Facultad de Ciencias Sociales - UBA"
 date: "07/09/2023"
 format:
