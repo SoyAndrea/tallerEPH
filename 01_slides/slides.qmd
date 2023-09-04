@@ -1,34 +1,82 @@
 ---
-title: "Taller EPH"
+title: "Introducción al Análisis de la Encuesta Permanente de Hogares (EPH) con R"
 author: "Andrea Gómez Vargas & Betsabe Cohen"
+institute: "Facultad de Ciencias Sociales - UBA"
+date: "07/09/2023"
 format:
   revealjs: 
-    theme: dark
+    theme: default
+    self-contained: true
+    slide-number: c/t
+    logo: Rlogo.png
+    footer: "[https://github.com/SoyAndrea/tallerEPH](https://github.com/SoyAndrea/tallerEPH)"
 ---
 
-##  {background-color="black" background-image="portada.png" background-size="1800px" background-repeat="repeat"}
+## ¡Hola 👋!
 
-## Temario
+:::: {.columns}
+::: {.column width="50%"}
 
--   Acerca de la es la EPH
+![Andrea Gómez Vargas](https://soyandrea.netlify.app/author/andrea/avatar_hu25ef211387e0b2a6d22fb7d5b232b00e_2192523_270x270_fill_q75_lanczos_center.jpg){width=40% style='border-radius: 80%;'}
+**Andrea**
+
+- Socióloga (UBA)
+- a
+- R-Ladies Global Team
+
+
+:::
+
+
+::: {.column width="50%"}
+
+
+![Betsabe Cohen](https://rladiesba.netlify.app/author/betsabe-cohen/avatar_hue039aedc9d3c7fc9c6ebaa365f220822_828839_270x270_fill_lanczos_center_2.png){width=40% style='border-radius: 80%; aling: center;'}
+**Betsy**
+
+- Socióloga (UBA)
+- m
+- R-Ladies Buenos Aires
+
+:::
+::::
+
+
+
+## R-Ladies 
+
+Es una organización mundial que promueve la diversidad de género en la comunidad R.
+
+Nuestra meta es crear una atmósfera amigable para personas interesadas en programar en R y que se identifiquen con géneros menos representados en la comunidad de R (que incluye pero no se limita a mujeres cis/trans, hombres trans, personas no binarias, género fluído o agénero).
+
+No importa si nunca usaste R o si es tu herramienta principal de trabajo. El objetivo es promover su uso, intercambiar conocimiento y crear una red de contactos a nivel local y global.
+
+
+## Nucleo de innovación Social (NIS)
+
+
+
+## ¿Qué vamos a ver hoy?
+
+-   Acerca de la Encuesta Permanente de Hogares (EPH)
 -   Muestra y ventanas de observación
--   Ejercicio con indicadores de trabajo
--   Extracción de datos `{EPH}`
--   Calculo de indicadores
--   Tablas con `{gt}`
+-   Ejercicio con indicadores de mercado de trabajo
+  -   Extracción de datos de la `librería {EPH}`
+  -   Calculo de indicadores
+  -   Tablas con la `librería {gt}`
 
-## Qué es la EPH {background-color="white"}
+## Qué es la EPH
 
 La Encuesta Permanente de Hogares, la EPH, es un revelamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
 
-## Nos permite conocer los datos de... {background-color="white"}
+## Nos permite conocer los datos de... 
 
 -   Pobreza e indigencia
 -   Tasa de desempleo
 -   Distribución del ingreso
 -   Condiciones de vida de los hogares.
 
-## Muestra {background-color="white"}
+## Muestra 
 
 ::: panel-tabset
 ### Polietápica
@@ -70,11 +118,7 @@ Content for `Tab A`
 Content for `Tab B`
 :::
 
-## Slide Title {background-color="aquamarine"}
-
-Aca podemos escribir cosas importantes o no
-
-## ejemplo sitio
+## librería `{eph}`
 
 ```{r}
 knitr::include_url("https://holatam.github.io/eph/")
