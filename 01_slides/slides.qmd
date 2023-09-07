@@ -5,23 +5,27 @@ institute: "Facultad de Ciencias Sociales - UBA"
 date: "07/09/2023"
 format:
   revealjs: 
-    theme: default
+    theme: custom.scss
+    #theme: moon
     self-contained: true
     slide-number: c/t
-    logo: Rlogo.png
+    logo: R-Ladies.png
     footer: "[https://github.com/SoyAndrea/tallerEPH](https://github.com/SoyAndrea/tallerEPH)"
 ---
 
-## ¡Hola 👋!
+## ¡Hola 👋!{background-color="#edafb8"}
 
 :::: {.columns}
 ::: {.column width="50%"}
 
-![Andrea Gómez Vargas](https://soyandrea.netlify.app/author/andrea/avatar_hu25ef211387e0b2a6d22fb7d5b232b00e_2192523_270x270_fill_q75_lanczos_center.jpg){width=40% style='border-radius: 80%;'}
+![](https://soyandrea.netlify.app/author/andrea/avatar_hu25ef211387e0b2a6d22fb7d5b232b00e_2192523_270x270_fill_q75_lanczos_center.jpg){width=30% style='border-radius: 80%;'}
+
+
+
 **Andrea**
 
 - Socióloga (UBA)
-- a
+- INDEC
 - R-Ladies Global Team
 
 
@@ -31,11 +35,14 @@ format:
 ::: {.column width="50%"}
 
 
-![Betsabe Cohen](https://rladiesba.netlify.app/author/betsabe-cohen/avatar_hue039aedc9d3c7fc9c6ebaa365f220822_828839_270x270_fill_lanczos_center_2.png){width=40% style='border-radius: 80%; aling: center;'}
+![](https://rladiesba.netlify.app/author/betsabe-cohen/avatar_hue039aedc9d3c7fc9c6ebaa365f220822_828839_270x270_fill_lanczos_center_2.png){width=30% style='border-radius: 80%; aling: center;'}
+
+
+
 **Betsy**
 
 - Socióloga (UBA)
-- m
+- Ministerio de Cultura
 - R-Ladies Buenos Aires
 
 :::
@@ -43,103 +50,186 @@ format:
 
 
 
-## R-Ladies 
+## R-Ladies {background-color="#edafb8"}
+
+:::: {.columns}
+::: {.column width="20%"}
+
+![](LogoRladiesBA.png)
+
+
+:::
+
+
+::: {.column width="80%"}
 
 Es una organización mundial que promueve la diversidad de género en la comunidad R.
 
-Nuestra meta es crear una atmósfera amigable para personas interesadas en programar en R y que se identifiquen con géneros menos representados en la comunidad de R (que incluye pero no se limita a mujeres cis/trans, hombres trans, personas no binarias, género fluído o agénero).
+Nuestra meta es crear una atmósfera amigable para personas interesadas en programar en R y que se identifiquen con géneros menos representados en la comunidad de R (que incluye pero no se limita a mujeres cis/trans, hombres trans, personas no binarias, género fluído o agénero). El objetivo es promover su uso, intercambiar conocimiento y crear una red de contactos a nivel local y global.
 
-No importa si nunca usaste R o si es tu herramienta principal de trabajo. El objetivo es promover su uso, intercambiar conocimiento y crear una red de contactos a nivel local y global.
+:::
+::::
+
+## Nucleo de innovación Social (NIS) {background-color="#edafb8"}
 
 
-## Nucleo de innovación Social (NIS)
+![](logoNIS.png)
+
+Es un hub de investigación y desarrollo interdisciplinario que lleva adelante acciones que promueven el  diálogo de saberes entre las ciencias sociales y la tecnología, articulando con organizaciones públicas, privadas y de la sociedad civil. 
 
 
-
-## ¿Qué vamos a ver hoy?
+## ¿Qué vamos a ver hoy?  {.incremental}
 
 -   Acerca de la Encuesta Permanente de Hogares (EPH)
--   Muestra y ventanas de observación
 -   Ejercicio con indicadores de mercado de trabajo
-  -   Extracción de datos de la `librería {EPH}`
-  -   Calculo de indicadores
-  -   Tablas con la `librería {gt}`
+    -   Extracción de datos de la `librería {EPH}`
+    -   Calculo de indicadores con la `librería {tidyverse}`
+    -   Tablas con la `librería {gt}`
 
-## Qué es la EPH
+## Qué es la EPH 
 
-La Encuesta Permanente de Hogares, la EPH, es un revelamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
+La Encuesta Permanente de Hogares (EPH) es un programa nacional de producción sistemática y permanente de indicadores sociales que lleva a cabo el [Instituto Nacional de EstadÌstica y Censos (INDEC)](https://www.indec.gob.ar/) con las direcciones provinciales de estadística (DPE). 
 
-## Nos permite conocer los datos de... 
+Tiene por objeto relevar las características sociodemográficas y socioeconómicas de la población. En su modalidad original se ha aplicado en la Argentina desde 1973 a través de la medición puntual de dos ondas anuales (mayo y octubre). 
 
--   Pobreza e indigencia
--   Tasa de desempleo
--   Distribución del ingreso
--   Condiciones de vida de los hogares.
+## 
 
-## Muestra 
+A partir de 2003, la EPH pasó a ser un relevamiento continuo que produce datos con frecuencia trimestral. 
+
+Cabe señalar que en base a esta encuesta se proporcionan regularmente, entre otros resultados,
+las tasas oficiales de empleo, desocupación, subocupación y pobreza
+
+## Características de la muestra
+
+La EPH se basa en una muestra probabilística, estratificada, en dos etapas de selección. Dicha muestra está distribuida a lo largo del período respecto del cual se brinda información (el trimestre) y el relevamiento se
+desarrolla durante todo el año
+
+## 
+
+La encuesta produce estimaciones trimestrales válidas para:
+
+
+• Cada uno de los 31 aglomerados urbanos (todas las capitales de provincias + aquellos aglomerados con +100.000 habitantes).
+
+• Total de 31 aglomerados agrupados.
+
+• Aglomerados del interior: todos los aglomerados, excluido el Gran Buenos Aires.1
+
+• Conjunto de aglomerados agrupados en 6 regiones estadísticas (Región Gran Buenos Aires, Región Cuyo, Región Noreste (NEA), Región Noroeste (NOA), Región Pampeana, Región Patagonia).
+
+• Conjunto de aglomerados con 500.000 y más habitantes.
+
+## Características del diseño de la muestra
+
+La EPH es una encuesta por muestreo. Esto significa que para conocer las diversas características del total de los hogares, se encuesta una pequeña fracción representativa de los mismos. La aplicación de rigurosas técnicas estadísticas permite garantizar la precisión de los datos así obtenidos.
+
+
+Los hogares que serán encuestados son seleccionados de forma aleatoria en dos etapas de selección:
+
+- En la primer etapa, dentro de cada aglomerado, se selecciona una cantidad de radios censales o subdivisiones de los mismos (áreas).
+- En la segunda etapa se listan todas las viviendas particulares de las áreas seleccionadas,
+para efectuar a partir de ese listado una selección aleatoria de viviendas. Los hogares que
+habitan esas viviendas son los hogares a encuestar.
+
+- La cantidad de viviendas a seleccionar en cada área, es igual dentro de cada aglomerado.
+
+## Características de la EPH
+
+¿De quiénes habla?:
+
+- La encuesta representa al 65% del total de la población.
+
+- Una vez al año se releva la **EAHU**, extensión de la EPH al 100% de la población urbana (localidades de 2.000 y más habitantes, que al último censo disponible -2010-, el 90% de la población residía en estas localidades).
+
+
+## Principales temáticas abordadas
+
+- Características demográficas básicas
+- Características ocupacionales
+- Características migratorias
+- Características habitacionales
+- Características educacionales
+- Características de ingreso
+
+
+<!-- ## Muestra  -->
+
+<!-- ::: panel-tabset -->
+<!-- ### Multietápica -->
+
+<!-- -   **Primer etapa**: dentro de cada **aglomerado** se selecciona una cantidad de **radios** censales o subdivisiones de los mismos (áreas). -->
+<!-- -   **Segunda etapa** se listan todas las **viviendas particulares** de las áreas seleccionadas,para efectuar a partir de ese listado una selección aleatoria de viviendas. **Los hogares** que habitan esas viviendas son los hogares a encuestar. -->
+
+<!-- ### Esquema 2-2-2 -->
+<!-- -   Las viviendas de un área **ingresan** a la muestra para ser encuestadas en **dos trimestres** consecutivos, en el mes y semana asignados a ese área. -->
+<!-- -   Se **retiran** por **dos trimestres** consecutivos. -->
+<!-- -   **Vuelven a la muestra** para ser encuestadas en **dos trimestres** consecutivos en el mes y semana asignados a ese área. -->
+<!-- ::: -->
+
+## Cuestionarios
+::: panel-tabset
+
+### Vivienda
+
+**Definición:** "cualquier recinto fijo o móvil que ha sido construído o adaptado para alojar personas. Las viviendas pueden ser particulares o colectivas. La EPH sólo encuesta las particulares".
+
+- Principales dimensiones que aborda el cuestionario de vivienda:
+
+- Identificación de viviendas y hogares
+
+- Características de la vivienda y hábitat
+
+Condición de residencia
+
+### Hogar
+**Definición:** "Persona o grupo de personas parientes o no, que viven bajo un mismo techo y comparten los gastos de alimentación"
+
+
+El jefe o la jefa de hogar
+Definición: Aquella persona reconocida como tal por los demás miembros del hogar.
+
+### Individuos
+
+Población de 10 años y más 
+
+- Condición de actividad 
+- Población ocupada
+- Población desocupada
+
+
+
+:::
+
+
+
+## librerias de trabajo
 
 ::: panel-tabset
-### Polietápica
 
--   **Primer etapa**, dentro de cada **aglomerado**, se selecciona una cantidad de **radios** censales o subdivisiones de los mismos (áreas).
--   **Segunda etapa** se listan todas las **viviendas particulares** de las áreas seleccionadas,para efectuar a partir de ese listado una selección aleatoria de viviendas. **Los hogares** que habitan esas viviendas son los hogares a encuestar.
-
-### Esquema 2-2-2
--   Las viviendas de un área **ingresan** a la muestra para ser encuestadas en **dos trimestres** consecutivos, en el mes y semana asignados a ese área.
--   Se **retiran** por **dos trimestres** consecutivos.
--   **Vuelven a la muestra** para ser encuestadas en **dos trimestres** consecutivos en el mes y semana asignados a ese área.
-:::
-
-## ejemplo columnas
-
-::: columns
-::: {.column width="40%"}
-Left column
-:::
-
-::: {.column width="60%"}
-Right column
-:::
-:::
-
-::: aside
-Some additional commentary of more peripheral interest.
-:::
-
-## tabs
-
-::: panel-tabset
-### Tab A
-
-Content for `Tab A`
-
-### Tab B
-
-Content for `Tab B`
-:::
-
-## librería `{eph}`
+### `{eph}`
 
 ```{r}
 knitr::include_url("https://holatam.github.io/eph/")
 ```
 
-## You can add R code
+
+### `{tidyverse}`
+
 
 ```{r}
-#| echo: true
-library(dplyr)
-library(ggplot2)
-g <- starwars |> 
-  ggplot() +
-  geom_point(aes(x = height, y = mass)) +
-  theme_light()
+knitr::include_url("https://www.tidyverse.org/")
 ```
 
-## And show the results aswell :)
+
+
+### `{gt}`
+
 
 ```{r}
-#| fig.align: center
-#| echo: true
-g 
+knitr::include_url("https://gt.rstudio.com/")
 ```
+
+
+:::
+
+

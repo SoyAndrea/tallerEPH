@@ -14,19 +14,7 @@ pkgdown:
   as_is: true  
 ---
 
-# ¿Qué es la EPH?
-
-La Encuesta Permanente de Hogares, la EPH, es un revelamiento estadístico que brinda información oficial sobre la situación económica, social y demográfica de la población.
-
-Gracias a la EPH podemos conocer los datos de Pobreza e indigencia, Tasa de desempleo,distribución del ingreso y condiciones de vida de los hogares entre otros indicadores
-
-La encuesta tiene una muestra representativa de más de 120 mil casos que se construye a partir de la Muestra Maestra Urbana de Viviendas de la República Argentina
-Es un muestreo **polietápico** En la primer etapa, dentro de cada aglomerado, se selecciona una cantidad de radios censales o subdivisiones de los mismos (áreas).En la segunda etapa se listan todas las viviendas particulares de las áreas seleccionadas,para efectuar a partir de ese listado una selección aleatoria de viviendas. Los hogares que habitan esas viviendas son los hogares a encuestar. 
-
-La encuesta se hace con una frecuencia **trimestral** con una rotación de esquema 2-2-2 
-* Las viviendas de un área ingresan a la muestra para ser encuestadas en dos trimestres consecutivos, en el mes y semana asignados a ese área.
-* Se retiran por dos trimestres consecutivos.
-* Vuelven a la muestra para ser encuestadas en dos trimestres consecutivos en el mes y semana asignados a ese área.
+# Ejercicios de Práctica
 
 En este taller vamos a aprender a:
 
@@ -87,35 +75,52 @@ ind_2023_1 <- get_microdata(
 En caso que no quieras o puedas usar este paquete podes descargar las bases de microdatos en el sitio del indec en la sección Bases de datos y descargar [EPH continua](https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos)
 
 
-
 Vamos a reproducir la tabla 1.1 del [Informe de Mercado de trabajo del primer trimestre 2023](https://www.indec.gob.ar/uploads/informesdeprensa/mercado_trabajo_eph_1trim234267B9F5D1.pdf):
+
+Tengamos en cuenta las siguientes definiciones básicas:
+
+*   **Población:** es el total de unidades al que expande la muestra [PONDERA].
+*   **Población Ocupada:** conjunto de personas que tienen por lo menos una ocupación
+*   **Población Desocupada:** personas que, no teniendo ocupación, están buscando activamente trabajo y
+están disponibles para trabajar.
+*   **Población Economicamente Activa**(PEA): la integran las personas que tienen una ocupación o que, sin tenerla,
+la están buscando activamente. Está compuesta por la población ocupada más la población desocupada.
+*   **Población Ocupada demandante de empleo:** población ocupada que busca activamente otra ocupación. 
+* **Población Subocupada:** se refiere a la subocupación por insuficiencia de horas, visible u horaria, y
+comprende a las personas ocupadas que trabajan menos de 35 horas semanales por causas involuntarias y que están dispuestas a trabajar más horas.
+    *   **Población Subocupada demandante**: población subocupada (por causas involuntarias y dispuesta a
+    trabajar más horas) que además busca activamente otra ocupación.
+    *   **Población Subocupada no demandante**: población subocupada (por causas involuntarias y dispuesta a
+trabajar más horas) que no está en la búsqueda activa de otra ocupación. 
+
+> Tanto la ocupación como la desocupación constituyen lo que se denomina **condición de actividad** que define la situación en que se encuentran las personas con respecto a su participación o no en la actividad económica.
+
 
 Primero creamos una tabla con los siguientes indicadores de resumen:
 
 *   Población
 *   Ocupados
 *   Desocupados
-*   PEA
+*   Población Economicamente Activa (PEA)
 *   Ocupados demandantes
 *   Subocupados (demandantes, no demandantes y total)
 
 Estos niveles nos van a permitir calcular las tasas de forma sencilla.
 
-Para obtener cualquier tasa necesitamos crear un numerador y un denominador. Por ejemplo la tasa de empleo es el cociente entre $Ocupados/Población$.
+Para obtener cualquier tasa necesitamos crear un numerador y un denominador. Por ejemplo: $\text{Tasa de empleo: }  Ocupados/Población$.
 
 Al ser una muestra en la EPH trabajamos con el total expandido por su ponderador, en este caso lo encontramos en la variable **PONDERA**.
 
 Para hacer la tabla vamos a trabajar con las siguientes variables de la base EPH:
 
-
-- PONDERA: Que es el factor de expansión para cada unidad de análisis
-- ESTADO: Que indica la condición de actividad y puede tomar los valores: 
+- PONDERA: Es el factor de expansión para cada unidad de análisis
+- ESTADO: Indica la condición de actividad y puede tomar los valores: 
   - 0 = Entrevista individual no realizada (no respuesta al cuestionario individual)
   - 1 = Ocupado
   - 2 = Desocupado
   - 3 = Inactivo
   - 4 = Menor de 10 años
-- PP03J: Que es la pregunta: Aparte de este/os trabajo/s, ¿estuvo buscando algún empleo / ocupación /actividad? y que toma los valores: 
+- PP03J: Es la pregunta: _Aparte de este/os trabajo/s, ¿estuvo buscando algún empleo / ocupación /actividad?_, que toma los valores: 
   - 1 = Sí
   - 2 = No
   - 9 = Ns/Nr
@@ -127,19 +132,9 @@ Para hacer la tabla vamos a trabajar con las siguientes variables de la base EPH
   - 9 = Ns/Nr
 
 
-Con la función `summarise` del paquete `{tidyerse}` podemos realizar distintas operaciones de resumen sobre las variables de nuestro análisis con la base que estamos trabajando:
-
-*   **Población:** son la cantidad de personas que tiene la base es decir simplemente sumamos los valores de la variable PONDERA.
-*   **Ocupación:** En este caso, debemos agregar un filtro sobre la población, ya que solo queremos sumar los ponderadores de aquellas personas que se encuentran ocupadas. Esto lo hacemos indicando entre corchete [] el filtro. (La lógica seria: “Suma los valores de la columna PONDERA, solo para aquellos registros donde el ESTADO es igual a 1”)
-*   **Desocupación:** Con una lógica similar a la de Ocupación filtramos los casos que en la variable *ESTADO* tienen la categoría 2 (desocupado)
-*   **PEA:**(Población Económicamente Activa): es igual a la suma de la Población Ocupada y la desocupada.
-*   **Ocupación demandante**: Son el el conjunto de las personas ocupadas que estuvieron buscando otro trabajo.
-*   **Subocupación demandante**: Suma de quienes estando ocupados tienen una carga horaria (INTENSI ==1) que es insuficiente y que estuvieron buscando otra actividad
-*   **Subocupación no demandante**: Suma de quienes estando ocupados tienen una carga horaria (INTENSI ==1) que es insuficiente pero no estuvo buscando otra actividad 
-
-> Tanto la ocupación como la desocupación constituyen lo que se denomina **condición de actividad** que define la situación en que se encuentran las personas con respecto a su participación o no en la actividad económica.
-
 # Tabla resumen
+
+Con la función `summarise` del paquete `{tidyerse}` podemos realizar distintas operaciones de resumen sobre las variables de nuestro análisis con la base que estamos trabajando:
 
 ```{r}
 tabla_1 <- ind_2023_1 |> 
@@ -323,3 +318,10 @@ tabla_4
 
 ```
 
+# Licencia 
+
+Este taller está a disposición del público bajo licencias de código abierto. Toda la documentación y los materiales publicados están disponibles bajo una licencia **CC BY-SA-NC**.
+
+A continuación, puedes leer más sobre la [licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+![Licencia de Creative Commons](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png){width="20%" fig-align="left"}
