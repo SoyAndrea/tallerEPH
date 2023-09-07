@@ -9,7 +9,8 @@ format:
     #theme: moon
     self-contained: true
     slide-number: c/t
-    logo: R-Ladies.png
+    logo: LogoRladiesBA.png
+    css: logo.css
     footer: "[https://github.com/SoyAndrea/tallerEPH](https://github.com/SoyAndrea/tallerEPH)"
 ---
 
@@ -25,7 +26,7 @@ format:
 **Andrea**
 
 - Socióloga (UBA)
-- INDEC
+- Analista de Estadísticas de Polación en INDEC
 - R-Ladies Global Team
 
 
@@ -42,7 +43,7 @@ format:
 **Betsy**
 
 - Socióloga (UBA)
-- Ministerio de Cultura
+- Analista de datos en el Ministerio de Cultura de la Nación
 - R-Ladies Buenos Aires
 
 :::
@@ -52,9 +53,9 @@ format:
 
 ## R-Ladies {background-color="#edafb8"}
 
+ 
 :::: {.columns}
 ::: {.column width="20%"}
-
 ![](LogoRladiesBA.png)
 
 
@@ -73,7 +74,7 @@ Nuestra meta es crear una atmósfera amigable para personas interesadas en progr
 ## Nucleo de innovación Social (NIS) {background-color="#edafb8"}
 
 
-![](logoNIS.png)
+![](logoNIS.png){width=40%}
 
 Es un hub de investigación y desarrollo interdisciplinario que lleva adelante acciones que promueven el  diálogo de saberes entre las ciencias sociales y la tecnología, articulando con organizaciones públicas, privadas y de la sociedad civil. 
 
@@ -81,6 +82,7 @@ Es un hub de investigación y desarrollo interdisciplinario que lleva adelante a
 ## ¿Qué vamos a ver hoy?  {.incremental}
 
 -   Acerca de la Encuesta Permanente de Hogares (EPH)
+-   R & Rstudio 
 -   Ejercicio con indicadores de mercado de trabajo
     -   Extracción de datos de la `librería {EPH}`
     -   Calculo de indicadores con la `librería {tidyverse}`
@@ -90,59 +92,64 @@ Es un hub de investigación y desarrollo interdisciplinario que lleva adelante a
 
 La Encuesta Permanente de Hogares (EPH) es un programa nacional de producción sistemática y permanente de indicadores sociales que lleva a cabo el [Instituto Nacional de EstadÌstica y Censos (INDEC)](https://www.indec.gob.ar/) con las direcciones provinciales de estadística (DPE). 
 
+<br>
+
 Tiene por objeto relevar las características sociodemográficas y socioeconómicas de la población. En su modalidad original se ha aplicado en la Argentina desde 1973 a través de la medición puntual de dos ondas anuales (mayo y octubre). 
 
 ## 
 
+<br>
+<br>
 A partir de 2003, la EPH pasó a ser un relevamiento continuo que produce datos con frecuencia trimestral. 
 
+<br>
 Cabe señalar que en base a esta encuesta se proporcionan regularmente, entre otros resultados,
-las tasas oficiales de empleo, desocupación, subocupación y pobreza
+las **tasas oficiales de empleo, desocupación, subocupación y pobreza**.
 
 ## Características de la muestra
 
+<br>
 La EPH se basa en una muestra probabilística, estratificada, en dos etapas de selección. Dicha muestra está distribuida a lo largo del período respecto del cual se brinda información (el trimestre) y el relevamiento se
 desarrolla durante todo el año
 
-## 
-
+<br>
 La encuesta produce estimaciones trimestrales válidas para:
 
+- Cada uno de los 31 aglomerados urbanos (todas las capitales de provincias + aquellos aglomerados con +100.000 habitantes).
 
-• Cada uno de los 31 aglomerados urbanos (todas las capitales de provincias + aquellos aglomerados con +100.000 habitantes).
+## 
+La encuesta produce estimaciones trimestrales válidas para:
 
-• Total de 31 aglomerados agrupados.
-
-• Aglomerados del interior: todos los aglomerados, excluido el Gran Buenos Aires.1
-
-• Conjunto de aglomerados agrupados en 6 regiones estadísticas (Región Gran Buenos Aires, Región Cuyo, Región Noreste (NEA), Región Noroeste (NOA), Región Pampeana, Región Patagonia).
-
-• Conjunto de aglomerados con 500.000 y más habitantes.
+- Total de 31 aglomerados agrupados.
+- Aglomerados del interior: todos los aglomerados, excluido el Gran Buenos Aires.
+- Conjunto de aglomerados agrupados en 6 regiones estadísticas (Región Gran Buenos Aires, Región Cuyo, Región Noreste (NEA), Región Noroeste (NOA), Región Pampeana, Región Patagonia).
+- Conjunto de aglomerados con 500.000 y más habitantes.
 
 ## Características del diseño de la muestra
 
+<br>
 La EPH es una encuesta por muestreo. Esto significa que para conocer las diversas características del total de los hogares, se encuesta una pequeña fracción representativa de los mismos. La aplicación de rigurosas técnicas estadísticas permite garantizar la precisión de los datos así obtenidos.
 
 
+## 
 Los hogares que serán encuestados son seleccionados de forma aleatoria en dos etapas de selección:
 
-- En la primer etapa, dentro de cada aglomerado, se selecciona una cantidad de radios censales o subdivisiones de los mismos (áreas).
-- En la segunda etapa se listan todas las viviendas particulares de las áreas seleccionadas,
-para efectuar a partir de ese listado una selección aleatoria de viviendas. Los hogares que
-habitan esas viviendas son los hogares a encuestar.
-
+- En la **primer etapa**, dentro de cada aglomerado, se selecciona una cantidad de radios censales o subdivisiones de los mismos (áreas).
+- En la **segunda etapa** se listan todas las viviendas particulares de las áreas seleccionadas, para efectuar a partir de ese listado una selección aleatoria de viviendas. Los hogares que habitan esas viviendas son los hogares a encuestar.
 - La cantidad de viviendas a seleccionar en cada área, es igual dentro de cada aglomerado.
 
 ## Características de la EPH
+<br>
 
 ¿De quiénes habla?:
 
 - La encuesta representa al 65% del total de la población.
-
 - Una vez al año se releva la **EAHU**, extensión de la EPH al 100% de la población urbana (localidades de 2.000 y más habitantes, que al último censo disponible -2010-, el 90% de la población residía en estas localidades).
 
 
 ## Principales temáticas abordadas
+
+<br>
 
 - Características demográficas básicas
 - Características ocupacionales
@@ -151,54 +158,60 @@ habitan esas viviendas son los hogares a encuestar.
 - Características educacionales
 - Características de ingreso
 
+# Cuestionarios
 
-<!-- ## Muestra  -->
-
-<!-- ::: panel-tabset -->
-<!-- ### Multietápica -->
-
-<!-- -   **Primer etapa**: dentro de cada **aglomerado** se selecciona una cantidad de **radios** censales o subdivisiones de los mismos (áreas). -->
-<!-- -   **Segunda etapa** se listan todas las **viviendas particulares** de las áreas seleccionadas,para efectuar a partir de ese listado una selección aleatoria de viviendas. **Los hogares** que habitan esas viviendas son los hogares a encuestar. -->
-
-<!-- ### Esquema 2-2-2 -->
-<!-- -   Las viviendas de un área **ingresan** a la muestra para ser encuestadas en **dos trimestres** consecutivos, en el mes y semana asignados a ese área. -->
-<!-- -   Se **retiran** por **dos trimestres** consecutivos. -->
-<!-- -   **Vuelven a la muestra** para ser encuestadas en **dos trimestres** consecutivos en el mes y semana asignados a ese área. -->
-<!-- ::: -->
-
-## Cuestionarios
-::: panel-tabset
-
-### Vivienda
-
-**Definición:** "cualquier recinto fijo o móvil que ha sido construído o adaptado para alojar personas. Las viviendas pueden ser particulares o colectivas. La EPH sólo encuesta las particulares".
-
-- Principales dimensiones que aborda el cuestionario de vivienda:
-
-- Identificación de viviendas y hogares
-
-- Características de la vivienda y hábitat
-
-Condición de residencia
-
-### Hogar
-**Definición:** "Persona o grupo de personas parientes o no, que viven bajo un mismo techo y comparten los gastos de alimentación"
+## Cuestionario Vivienda 
 
 
-El jefe o la jefa de hogar
-Definición: Aquella persona reconocida como tal por los demás miembros del hogar.
-
-### Individuos
-
-Población de 10 años y más 
-
-- Condición de actividad 
-- Población ocupada
-- Población desocupada
+```{r}
+knitr::include_url("https://www.indec.gob.ar/ftp/cuadros/sociedad/EPHContinua_CVivienda.pdf")
+```
 
 
 
-:::
+## Cuestionario del Hogar
+
+
+```{r}
+knitr::include_url("https://www.indec.gob.ar/ftp/cuadros/sociedad/EPHContinua_CHogar.pdf")
+```
+
+
+
+
+## Cuestionario Individual
+
+
+
+```{r}
+knitr::include_url("https://www.indec.gob.ar/ftp/cuadros/sociedad/EPHContinua_CIndividual.pdf")
+```
+
+
+
+
+# R & RStudio
+
+## ¿Qué es R?
+
+- Lenguaje para el procesamiento y análisis estadístico de datos
+- Software Libre
+- Sintaxis _Básica_: R base
+- Sintaxis _incremental_: El lenguaje se va ampliando por aportes de Universidades, investigadores/as, usuarios/as y empresas privadas, organizados en librerías (o paquetes).
+- Graficos con calidad de publicación
+
+
+## RStudio
+<br>
+- El entorno más _cómodo_ para utilizar el lenguaje R es el programa R studio
+
+- Posit es una empresa que produce productos asociados al lenguaje R, como el programa sobre el que corremos los comandos, y extensiones del lenguaje (librerías).
+
+- El programa es **gratuito** y se puede bajar de la página oficial
+
+## IDE
+
+![Interfaz](rstudio-cocina.png)
 
 
 
@@ -231,5 +244,22 @@ knitr::include_url("https://gt.rstudio.com/")
 
 
 :::
+
+
+# Ahora manos al código 
+Documento **02_practicaEPH.html**
+
+# Preguntas
+
+
+# Gracias {background-color="#edafb8"}
+
+![](LogoRladiesBA.png){width=20%}
+![](LogoNIS.png){width=50%}
+
+
+
+
+
 
 

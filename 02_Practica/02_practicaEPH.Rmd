@@ -29,7 +29,6 @@ Para poder trabajar ordenadamente te recomendamos:
 
 Tener instaladas las librerías que vamos a usar con la función `install.packages()`: `{tidyerse}`,`{gt}`,`{gtExtras}`, `{Janitor}` & `{eph}`
 
-
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # install.packages("tidyverse")
 # install.packages("gt")
@@ -77,7 +76,9 @@ En caso que no quieras o puedas usar este paquete podes descargar las bases de m
 
 Vamos a reproducir la tabla 1.1 del [Informe de Mercado de trabajo del primer trimestre 2023](https://www.indec.gob.ar/uploads/informesdeprensa/mercado_trabajo_eph_1trim234267B9F5D1.pdf):
 
-Tengamos en cuenta las siguientes definiciones básicas:
+# Definiciones Básicas
+
+Antes de cálcular los indicadores tengamos en cuenta las siguientes definiciones básicas: 
 
 *   **Población:** es el total de unidades al que expande la muestra [PONDERA].
 *   **Población Ocupada:** conjunto de personas que tienen por lo menos una ocupación
@@ -95,8 +96,9 @@ trabajar más horas) que no está en la búsqueda activa de otra ocupación.
 
 > Tanto la ocupación como la desocupación constituyen lo que se denomina **condición de actividad** que define la situación en que se encuentran las personas con respecto a su participación o no en la actividad económica.
 
+# Manos al código
 
-Primero creamos una tabla con los siguientes indicadores de resumen:
+Primero creamos una tabla con los siguientes indicadores de resumen (tomamos de base las definiciones mencionadas anteriormente):
 
 *   Población
 *   Ocupados
@@ -107,9 +109,11 @@ Primero creamos una tabla con los siguientes indicadores de resumen:
 
 Estos niveles nos van a permitir calcular las tasas de forma sencilla.
 
-Para obtener cualquier tasa necesitamos crear un numerador y un denominador. Por ejemplo: $\text{Tasa de empleo: }  Ocupados/Población$.
+> Para obtener cualquier tasa necesitamos crear un numerador y un denominador. Por ejemplo: $\text{Tasa de empleo: }  Ocupados/Población$.
 
 Al ser una muestra en la EPH trabajamos con el total expandido por su ponderador, en este caso lo encontramos en la variable **PONDERA**.
+
+## Variables de la Base EPH
 
 Para hacer la tabla vamos a trabajar con las siguientes variables de la base EPH:
 
@@ -130,7 +134,6 @@ Para hacer la tabla vamos a trabajar con las siguientes variables de la base EPH
   - 3 = Sobreocupado
   - 4 = Ocupado que no trabajó en la semana
   - 9 = Ns/Nr
-
 
 # Tabla resumen
 
