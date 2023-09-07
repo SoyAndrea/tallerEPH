@@ -13,4 +13,4 @@ Este taller está a disposición del público bajo licencias de código abierto.
 
 A continuación, puedes leer más sobre la [licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-![Licencia de Creative Commons](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png){width="20%" fig-align="left"}
+![Licencia de Creative Commons](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
