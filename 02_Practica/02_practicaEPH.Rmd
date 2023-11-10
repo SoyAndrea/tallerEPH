@@ -27,7 +27,7 @@ En este taller vamos a aprender a:
 
 Para poder trabajar ordenadamente te recomendamos:
 
-Tener instaladas las librerías que vamos a usar con la función `install.packages()`: `{tidyerse}`,`{gt}`,`{gtExtras}`, `{Janitor}` & `{eph}`
+Tener instaladas los paquetes que vamos a usar con la función `install.packages()`: `{tidyerse}`,`{gt}`,`{gtExtras}`, `{Janitor}` & `{eph}`
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # install.packages("tidyverse")
@@ -43,9 +43,9 @@ Una buena práctica siempre que trabajes con **encuestas** es tener a mano:
 -   [El registro de diseño](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eph/EPH_registro_1T2022.pdf): donde tenes la referencia del código de pregunta, estructura y en caso que corresponda las categorías posibles que tiene que adoptar.
 -   Definiciones operacionales que realiza INDEC sobre condición de actividad, subocupación horaria y categoría ocupacional disponible [aquí](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eph/EPH_Conceptos.pdf)
 
-## Setup librerías
+## Setup library
 
-El primer paso es llamar a las librerías que vamos a usar que por lo general siempre las colocamos al principio de nuestro script
+El primer paso es llamar a los paquetes que vamos a usar que por lo general siempre las colocamos al principio de nuestro script
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse) # para manipular los datos
@@ -64,13 +64,11 @@ Vamos a arrancar descargando los datos con la función `get_microdata()`. En est
 ```{r getdata}
 ind_2023_1 <- get_microdata(
   year = 2023,
-  trimester = 1,
+  period = 1,
   type = "individual",
-  vars = "all",
-  destfile = NA
-)
-
+  vars = "all")
 ```
+
 En caso que no quieras o puedas usar este paquete podes descargar las bases de microdatos en el sitio del indec en la sección Bases de datos y descargar [EPH continua](https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos)
 
 
@@ -187,11 +185,9 @@ Ahora repetimos la operación con lo datos de 2022
 # obtener los datos
 ind_2022 <- get_microdata(
   year = 2022,
-  trimester = c(1:4), # le decimos que traiga todos
+  period = c(1:4), # le decimos que traiga todos
   type = "individual",
-  vars = "all",
-  destfile = NA
-)
+  vars = "all")
 
 
 tabla_2 <- ind_2022 |> 

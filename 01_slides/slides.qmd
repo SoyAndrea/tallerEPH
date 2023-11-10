@@ -215,14 +215,14 @@ knitr::include_url("https://www.indec.gob.ar/ftp/cuadros/sociedad/EPHContinua_CI
 
 
 
-## librerias de trabajo
+## paquetes de trabajo
 
 ::: panel-tabset
 
 ### `{eph}`
 
 ```{r}
-knitr::include_url("https://holatam.github.io/eph/")
+knitr::include_url("https://ropensci.github.io/eph/")
 ```
 
 
