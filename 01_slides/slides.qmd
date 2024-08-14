@@ -19,7 +19,7 @@ format:
 :::: {.columns}
 ::: {.column width="50%"}
 
-![](https://soyandrea.netlify.app/author/andrea/avatar_hu25ef211387e0b2a6d22fb7d5b232b00e_2192523_270x270_fill_q75_lanczos_center.jpg){width=30% style='border-radius: 80%;'}
+![](https://avatars.githubusercontent.com/u/45582182?v=4){width=30% style='border-radius: 80%;'}
 
 
 
